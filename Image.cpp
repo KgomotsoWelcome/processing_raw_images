@@ -170,8 +170,6 @@ WLCKGO001 :: Image WLCKGO001 :: Image:: operator/(Image & rhs){
 			if(check == false){
 				*obegin = 0;
 			}
-
-
 			++obegin;
 			++oender;	
 		}
@@ -184,9 +182,25 @@ WLCKGO001 :: Image WLCKGO001 :: Image:: operator/(Image & rhs){
 	return duplicate;
 }
 
-WLCKGO001 :: Image WLCKGO001 :: Image:: operator*(Image & rhs){
-	//check if image is same size
-	Image duplicate = Image(rhs);
+WLCKGO001 :: Image WLCKGO001 :: Image:: operator*(int threshold){
+
+	Image duplicate = Image(*this);//copy constructor
+	Image :: iterator obegin = duplicate.begin();
+	Image :: iterator oender = duplicate.end();
+
+	while (obegin != oender){
+		
+		while (obegin != oender){
+			if(*obegin>threshold){
+				*obegin = 255;
+			}else{
+				*obegin = 0;
+			}
+			++obegin;
+			++oender;	
+		}
+	}
+
 	return duplicate;
 }
 

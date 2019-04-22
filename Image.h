@@ -47,7 +47,7 @@ namespace WLCKGO001{
 			Image operator-(Image & rhs);
 			Image operator!(void);
 			Image operator/(Image & rhs);
-			Image operator*(Image & rhs);
+			Image operator*(int threshold);
 
 
 		class iterator{
