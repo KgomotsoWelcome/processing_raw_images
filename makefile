@@ -22,11 +22,20 @@ Imageops.o: Imageops.cpp Image.h
 test: test.o 
 	$(CC) test.o Imageops.o -o test
 
-test.o: test.cpp
-	$(CC) $(CK) -w  -o test.o -c test.cpp 
+addition: 
+	./imageops -a Lenna_standard Lenna_hat_mask 
 
-run: 
-	./imageops
+subtraction: 
+	./imageops -s Lenna_standard Lenna_hat_mask
+
+inverse: 
+	./imageops -i shrek_rectangular 
+
+mask:
+	./imageops -l Lenna_standard Lenna_hat_mask
+
+threshold:
+	./imageops -t Lenna_standard 45
 
 clean:
 	@rm -f *.o

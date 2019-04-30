@@ -29,10 +29,11 @@ namespace WLCKGO001{
 			Image(); // default constructor - define in .cpp
 			~Image(); // destructor - define in .cpp file
 			Image(std::unique_ptr<unsigned char[]> data, int width, int height);
-			Image(const Image & rhs); // Copy Constructor
+			Image( Image & rhs); // Copy Constructor
 			Image(Image && rhs); // Move Constructor
+			//Image(std::unique_ptr<unsigned char[]> data, int width, int height);
 			// Copy and Move Assignment Operators
-			Image& operator=(const Image & rhs);
+			Image& operator=(Image & rhs);
 			Image& operator=(Image && rhs);
 
 			/*
@@ -43,20 +44,24 @@ namespace WLCKGO001{
 			*:threshold with f (int) (I1 * f)
 			*/
 
-			Image operator+(Image & rhs);
-			Image operator-(Image & rhs);
-			Image operator!(void);
+			Image& operator+(Image & rhs);
+			Image& operator-(Image & rhs);
+			Image& operator!(void);
 			Image operator/(Image & rhs);
-			Image operator*(int threshold);
-
+			//Image& operator/(Image & rhs);
+			Image& operator*(int threshold);
+			void load(string baseName);
+			void save(string baseName);
+			friend void  operator <<(ofstream & outs, const Image & rhs);
+			friend void operator >>(ifstream & stream, Image & image);
 
 		class iterator{
+			
 			private:
-
-				friend class Image;
 				unsigned char *ptr;
+				friend class Image;
 				// construct only via Image class (begin/end)
-				iterator(u_char *p) : 
+				iterator(unsigned char *p) : 
 					ptr(p) {}
 
 			public:
@@ -64,9 +69,10 @@ namespace WLCKGO001{
 				//copy construct is public
 				iterator(const iterator & rhs) : 
 					ptr(rhs.ptr) {}
+
 				// define overloaded ops: *, ++, --, =
-				const iterator & operator = (const iterator & rhs){
-					this->ptr = std::move(rhs.ptr);
+				iterator & operator = (iterator & rhs){
+					ptr = rhs.ptr;
         			return *this;
 				}
 				// other methods for iterator
@@ -80,40 +86,37 @@ namespace WLCKGO001{
 				    return *this;
 				}
 
-				iterator operator ++(int i){
-				    iterator duplicate(*this);
-				    (*this)++; 
-				    return duplicate;
-				}
 
 				iterator & operator --(){
 				    --ptr;
 				    return *this;
 				}
 
-				iterator operator --(int i){
-				    iterator duplicate(*this);
-				    --(*this); 
-				    return duplicate;
-				}
 
-				bool operator==(const iterator& rhs){
-					return (this->ptr == rhs.ptr);
-				}
+				 bool operator == (const iterator & rhs) {
+                    return ptr == rhs.ptr;
+                }
+
 				// checks whether Stat1 == Stat2
 				bool operator!=(const iterator& rhs){
-					return (this->ptr != rhs.ptr);
+					//return (ptr != rhs.ptr);
+					// return !((*this) == rhs);
+					return !Image::iterator::operator==(rhs);
 				}
 
 		};
 			// define begin()/end() to get iterator to start and
 			// "one-past" end.
-		iterator begin(void);
-		iterator end(void);
+		iterator begin(void){
+			return data.get();
+		}
+		iterator end(void){
+			return (data.get() + width*height);
+		}
 			
 	};
 
-
 }
+
 
 #endif 
